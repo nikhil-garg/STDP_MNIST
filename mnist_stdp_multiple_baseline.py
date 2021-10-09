@@ -1,28 +1,20 @@
 
+import sys
+import os
+sys.path.append(os.getcwd())
+
 import nengo
 import numpy as np
-from numpy import random
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-import os
-from nengo.dists import Choice
-from datetime import datetime
-import pickle
-from nengo.utils.matplotlib import rasterplot
-import time
+from simplified_stdp_Nessy import STDP
+from LIFN2S3 import LIF
 from InputData import PresentInputWithPause
-from nengo.neurons import LIFRate
-from nengo.params import Parameter, NumberParam, FrozenObject
-from nengo.dists import Choice, Distribution, get_samples, Uniform
-from nengo.utils.numpy import clip, is_array_like
-from utilis import *
+from Heatmap import AllHeatMapSave,HeatMapSave
+from datetime import datetime
+from nengo_extras.data import load_mnist
+import pickle
 from args_mnist import args as my_args
-import itertools
 import random
-import logging
-import random 
-
-from stdp import STDP
+from utilis import *
 
 def evaluate_mnist_multiple_baseline(args):
 
@@ -30,132 +22,141 @@ def evaluate_mnist_multiple_baseline(args):
     # load the data
     #############################
     input_nbr = args.input_nbr
-    input_nbr = args.input_nbr
 
-    probe_sample_rate = (input_nbr/10)/1000 #Probe sample rate. Proportional to input_nbr to scale down sampling rate of simulations 
-
+    presentation_time = args.presentation_time
 
     x = args.digit
     np.random.seed(args.seed)
     random.seed(args.seed)
 
-    data = np.load('mnist_norm.npz', allow_pickle=True)
-    image_train_filtered = data['image_train_filtered']/255
-    label_train_filtered = data['label_train_filtered']
-    image_test_filtered = data['image_test_filtered']/255
-    label_test_filtered = data['label_test_filtered']
+    img_rows, img_cols = 28, 28
+    Dataset = "Mnist"
+    (image_train, label_train), (image_test, label_test) = load_mnist()
+
+    #select the 0s and 1s as the two classes from MNIST data
+    image_train_filtered = []
+    label_train_filtered = []
+
+    epoch = 1
+
+    for e in range(epoch):
+        for i in range(0,input_nbr):
+    #       if label_train[i] in range(0,2):
+                image_train_filtered.append(image_train[i])
+                label_train_filtered.append(label_train[i])
+
+    print("actual input",len(label_train_filtered))
+    print(np.bincount(label_train_filtered))
 
 
-    image_assign_filtered = image_train_filtered
-    label_assign_filtered = label_train_filtered
+    image_train_filtered = np.array(image_train_filtered)
+    label_train_filtered = np.array(label_train_filtered)
 
-    image_train_filtered = np.tile(image_train_filtered,(args.iterations,1,1))
-    label_train_filtered = np.tile(label_train_filtered,(args.iterations))
-
-    #Simulation Parameters 
-    #Presentation time
-    presentation_time = 0.20
-    #Pause time
-    # pause_time = args.pause_time + 0.0001
-    pause_time = 0.15
-    #Iterations
-    iterations=args.iterations
-    #Input layer parameters
-    n_in = args.n_in
-    # g_max = 1/784 #Maximum output contribution
-    amp_neuron = args.amp_neuron
-    n_neurons = args.n_neurons # Layer 1 neurons
-    # inhib_factor = args.inhib_factor #Multiplication factor for lateral inhibition
-
-
-    input_neurons_args = {
-            "n_neurons":n_in,
-            "dimensions":1,
-            "label":"Input layer",
-            "encoders":nengo.dists.Choice([[1]]),
-            # "max_rates":nengo.dists.Uniform(22,22),
-            "intercepts":nengo.dists.Uniform(0,0),
-            # "gain":nengo.dists.Choice([args.gain_in]),
-            # "bias":nengo.dists.Choice([args.bias_in]),
-            # "noise":nengo.processes.WhiteNoise(dist=nengo.dists.Gaussian(args.noise_input, (args.noise_input/2)+0.00001), seed=1), 
-
-            "neuron_type":nengo.LIF(amplitude=args.amp_neuron),
-            "seed":0
-            # "neuron_type":nengo.neurons.SpikingRectifiedLinear()#SpikingRelu neuron. 
-    }
-
-    #Layer 1 parameters
-    layer_1_neurons_args = {
-            "n_neurons":n_neurons,
-            "dimensions":1,
-            "label":"Layer 1",
-            "encoders":nengo.dists.Choice([[1]]),
-            "gain":nengo.dists.Choice([2]),
-            "bias":nengo.dists.Choice([0]),
-            # "intercepts":nengo.dists.Choice([0]),
-            # "max_rates":nengo.dists.Choice([args.rate_out,args.rate_out]),
-            # "noise":nengo.processes.WhiteNoise(dist=nengo.dists.Gaussian(0, 0.5), seed=1), 
-            # "neuron_type":nengo.neurons.LIF(tau_rc=args.tau_out, min_voltage=0)
-            # "neuron_type":MyLIF_out(tau_rc=args.tau_out, min_voltage=-1)
-            "neuron_type":STDPLIF(tau_rc=0.02, inhibition_time=args.inhibition_time,inc_n=args.inc_n,tau_n=args.tau_n)
-    }
-
-    #Learning rule parameters
-    learning_args = {
-            "alf_p":args.alpha_p,
-            "alf_n":args.alpha_n,
-            "beta_p":args.beta_p,
-            "beta_n":args.beta_n,
-            "pre_tau":args.tau_pre,
-            "post_tau":args.tau_post
-
-            }
-    # learning_args = {
-    #         "lr": args.lr,
-    #         "tau_stdp":args.tau_stdp,
-    # }
-
-    # argument_string = "presentation_time: "+ str(presentation_time)+ "\n pause_time: "+ str(pause_time)+ "\n input_neurons_args: " + str(input_neurons_args)+ " \n layer_1_neuron_args: " + str(layer_1_neurons_args)+"\n Lateral Inhibition parameters: " + str(lateral_inhib_args) + "\n learning parameters: " + str(learning_args)+ "\n g_max: "+ str(g_max) 
-
-    images = image_train_filtered
-    labels = label_train_filtered
-    np.random.seed(args.seed)
-    random.seed(args.seed) 
-    # weights randomly initiated 
-    layer1_weights = np.random.uniform(0,1, (n_neurons, n_in))
     
+    image_test_filtered = []
+    label_test_filtered = []
+
+
+    for i in range(0,10000):
+        image_test_filtered.append(image_test[i])
+        label_test_filtered.append(label_test[i])
+
+    image_test_filtered = np.array(image_test_filtered)
+    label_test_filtered = np.array(label_test_filtered)
+
+
+
+    sim_info = {
+    "presentation_time" : args.presentation_time,
+    "pause_time" : args.pause_time,
+    "n_in" : args.n_in,
+    "n_neurons" : args.n_neurons,
+    "amplitude" : args.amp_neuron,
+    "dt" : args.dt }
+
+    learning_args = {
+    "learning_rate":8e-6,
+    "alf_p":args.alpha_p,#0.01,
+    "alf_n":args.alpha_n,#0.009,
+    "beta_p":args.beta_p,#1.5,src.Log.
+    "beta_n":args.beta_n,#2.5,
+    "prune":False,
+    "stats":True,
+    "reinforce":False,
+    "STDP_DT":0.005,
+    "BatchPerPrune":(sim_info["presentation_time"]+sim_info["pause_time"])*1000 }
+
+    # Neuron Params 
+    neuron_args = {
+    "spiking_threshold":1,
+    "tau_ref":0.01, #0.002
+    "inc_n":0.01, #0.01 How much the adaptation state is increased after each spike.
+    "tau_rc":0.02, #0.02 how quickly the membrane voltage decays to zero in the absence of input
+    "tau_n":1, #1 how quickly the adaptation state decays to zero in the absence of spikes
+    "inhib":2 } 
+
+    n_neurons = args.n_neurons
+    layer1_weights = np.round(np.random.normal(size=(sim_info["n_neurons"], sim_info["n_in"])),5)
+
+    layer1_weights = np.clip(0.5 + layer1_weights * 0.25,0,1)
+
+    animatedHeatMap = False
+
 
     model = nengo.Network("My network", seed = args.seed)
     #############################
     # Model construction
     #############################
     with model:
-        picture = nengo.Node(PresentInputWithPause(images, presentation_time, pause_time,0))
-        # picture = nengo.Node(nengo.processes.PresentInput(images, presentation_time=presentation_time))
-        # true_label = nengo.Node(nengo.processes.PresentInput(labels, presentation_time=presentation_time))
-        true_label = nengo.Node(PresentInputWithPause(labels, presentation_time, pause_time,-1))
-        # input layer  
-        input_layer = nengo.Ensemble(**input_neurons_args)
-        input_conn = nengo.Connection(picture,input_layer.neurons,synapse=None)
-        #first layer
-        layer1 = nengo.Ensemble(**layer_1_neurons_args)
-        #Weights between input layer and layer 1
-        # w = nengo.Node(CustomRule_post_baseline(**learning_args), size_in=n_in, size_out=n_neurons)
-        # nengo.Connection(input_layer.neurons, w, synapse=None)
-        # nengo.Connection(w, layer1.neurons, synapse=args.synapse_layer_1)
-        # weights = w.output.history
+        picture = nengo.Node(PresentInputWithPause(image_train_filtered, sim_info["presentation_time"],sim_info["pause_time"]),label="Mnist")
+        input_layer = nengo.Ensemble(
+            sim_info["n_in"],
+            1,
+            label="Input",
+            neuron_type=nengo.LIF(amplitude=0.001),
+            encoders=nengo.dists.Choice([[1]]),
+            intercepts=nengo.dists.Choice([0]),
+            seed=0)
+
+        input_conn = nengo.Connection(picture,input_layer.neurons,synapse=None,seed=0)
+        
+        # define first layer
+        layer1 = nengo.Ensemble(
+            sim_info["n_neurons"],
+            1,
+            label="layer1",
+            neuron_type=LIF(spiking_threshold=neuron_args["spiking_threshold"],inc_n=neuron_args["inc_n"],tau_n=neuron_args["tau_n"],tau_rc=neuron_args["tau_rc"], amplitude=0.001),
+            gain=nengo.dists.Choice([2]),
+            encoders=nengo.dists.Choice([[1]]),
+            bias=nengo.dists.Choice([0]),
+            seed=0
+             )
+
         conn1 = nengo.Connection(
             input_layer.neurons,
             layer1.neurons,
             transform=layer1_weights, 
-            learning_rule_type=STDP(pre_tau=learning_args["pre_tau"],post_tau=learning_args["post_tau"],alf_p=learning_args["alf_p"],alf_n=learning_args["alf_n"],beta_p=learning_args["beta_p"],beta_n=learning_args["beta_n"])
-                )
+            learning_rule_type=STDP(learning_rate=learning_args["learning_rate"],alf_p=learning_args["alf_p"],alf_n=learning_args["alf_n"],beta_p=learning_args["beta_p"],beta_n=learning_args["beta_n"]),seed=0
+            )
+
+        #############################
+        # setup the probes
+        #############################
+
+        layer1_synapses_probe = nengo.Probe(conn1,"weights",label="layer1_synapses") 
+        layer1_spikes_probe = nengo.Probe(layer1.neurons,"output",label="layer1_spikes")
+        layer1_voltage_probe = nengo.Probe(layer1.neurons,"voltage",label="layer1_voltage")
+
         layer1_synapses_probe = nengo.Probe(conn1,"weights",label="layer1_synapses", sample_every=5)
         
+
+    step_time = (sim_info["presentation_time"] + sim_info["pause_time"]) 
+    Args = {"backend":"Nengo","Dataset":Dataset,"Labels":label_train_filtered,"step_time":step_time,"input_nbr":input_nbr}
+
     # with nengo_ocl.Simulator(model) as sim :   
     with nengo.Simulator(model, dt=args.dt, optimize=True) as sim:
 
-        sim.run((presentation_time+pause_time) * input_nbr)
+        sim.run(step_time * label_train_filtered.shape[0])
 
     last_weight = sim.data[layer1_synapses_probe][-1]
 
@@ -163,24 +164,43 @@ def evaluate_mnist_multiple_baseline(args):
 
     pause_time = 0
     #Neuron class assingment
-    images = image_assign_filtered
-    labels = label_assign_filtered
-
 
     model = nengo.Network("My network", seed = args.seed)
 
     with model:
 
-        # picture = nengo.Node(PresentInputWithPause(images, presentation_time, pause_time,0))
-        picture = nengo.Node(nengo.processes.PresentInput(images, presentation_time=presentation_time))
-        true_label = nengo.Node(nengo.processes.PresentInput(labels, presentation_time=presentation_time))
-        # true_label = nengo.Node(PresentInputWithPause(labels, presentation_time, pause_time,-1))
-        # input layer  
-        input_layer = nengo.Ensemble(**input_neurons_args)
-        input_conn = nengo.Connection(picture,input_layer.neurons,synapse=None)
-        #first layer
-        layer1 = nengo.Ensemble(**layer_1_neurons_args)
-        nengo.Connection(input_layer.neurons, layer1.neurons,transform=last_weight,synapse=args.synapse_layer_1)
+        picture = nengo.Node(nengo.processes.PresentInput(image_train_filtered, sim_info["presentation_time"]))
+
+        true_label = nengo.Node(nengo.processes.PresentInput(label_train_filtered, presentation_time=args.presentation_time))
+
+        input_layer = nengo.Ensemble(
+            sim_info["n_in"],
+            1,
+            label="Input",
+            neuron_type=nengo.LIF(amplitude=0.001),
+            encoders=nengo.dists.Choice([[1]]),
+            intercepts=nengo.dists.Choice([0]),
+            seed=0)
+
+        input_conn = nengo.Connection(picture,input_layer.neurons,synapse=None,seed=0)
+        
+        # define first layer
+        layer1 = nengo.Ensemble(
+            sim_info["n_neurons"],
+            1,
+            label="layer1",
+            neuron_type=LIF(spiking_threshold=neuron_args["spiking_threshold"],inc_n=neuron_args["inc_n"],tau_n=neuron_args["tau_n"],tau_rc=neuron_args["tau_rc"], amplitude=0.001),
+            gain=nengo.dists.Choice([2]),
+            encoders=nengo.dists.Choice([[1]]),
+            bias=nengo.dists.Choice([0]),
+            seed=0
+             )
+
+        conn1 = nengo.Connection(
+            input_layer.neurons,
+            layer1.neurons,
+            transform=last_weight)
+
         #Probes
         p_true_label = nengo.Probe(true_label)
         p_layer_1 = nengo.Probe(layer1.neurons)
@@ -188,7 +208,7 @@ def evaluate_mnist_multiple_baseline(args):
     # with nengo_ocl.Simulator(model) as sim :   
     with nengo.Simulator(model, dt=args.dt, optimize=True) as sim:
         
-        sim.run((presentation_time+pause_time) * input_nbr)
+        sim.run((args.presentation_time) * args.input_nbr)
     
     t_data = sim.trange()
     labels = sim.data[p_true_label][:,0]
@@ -223,25 +243,45 @@ def evaluate_mnist_multiple_baseline(args):
     with model:
 
         # picture = nengo.Node(PresentInputWithPause(images, presentation_time, pause_time,0))
-        picture = nengo.Node(nengo.processes.PresentInput(images, presentation_time=presentation_time))
-        true_label = nengo.Node(nengo.processes.PresentInput(labels, presentation_time=presentation_time))
+        picture = nengo.Node(nengo.processes.PresentInput(images, presentation_time=args.presentation_time))
+        true_label = nengo.Node(nengo.processes.PresentInput(labels, presentation_time=args.presentation_time))
         # true_label = nengo.Node(PresentInputWithPause(labels, presentation_time, pause_time,-1))
-        input_layer = nengo.Ensemble(**input_neurons_args)
-        input_conn = nengo.Connection(picture,input_layer.neurons,synapse=None)
-        #first layer
-        layer1 = nengo.Ensemble(**layer_1_neurons_args)
-        nengo.Connection(input_layer.neurons, layer1.neurons,transform=last_weight,synapse=args.synapse_layer_1)
+        input_layer = nengo.Ensemble(
+            sim_info["n_in"],
+            1,
+            label="Input",
+            neuron_type=nengo.LIF(amplitude=0.001),
+            encoders=nengo.dists.Choice([[1]]),
+            intercepts=nengo.dists.Choice([0]),
+            seed=0)
+
+        input_conn = nengo.Connection(picture,input_layer.neurons,synapse=None,seed=0)
+        
+        # define first layer
+        layer1 = nengo.Ensemble(
+            sim_info["n_neurons"],
+            1,
+            label="layer1",
+            neuron_type=LIF(spiking_threshold=neuron_args["spiking_threshold"],inc_n=neuron_args["inc_n"],tau_n=neuron_args["tau_n"],tau_rc=neuron_args["tau_rc"], amplitude=0.001),
+            gain=nengo.dists.Choice([2]),
+            encoders=nengo.dists.Choice([[1]]),
+            bias=nengo.dists.Choice([0]),
+            seed=0
+             )
+
+        conn1 = nengo.Connection(
+            input_layer.neurons,
+            layer1.neurons,
+            transform=last_weight)
         p_true_label = nengo.Probe(true_label)
         p_layer_1 = nengo.Probe(layer1.neurons)
 
 
-    step_time = (presentation_time + pause_time) 
-
     with nengo.Simulator(model,dt=args.dt) as sim:
            
-        sim.run(presentation_time * input_nbr)
+        sim.run(args.presentation_time * input_nbr)
 
-    accuracy_2 = evaluation_v2(10,n_neurons,int(((presentation_time * label_test_filtered.shape[0]) / sim.dt) / input_nbr),spikes_layer1_probe_train,label_train_filtered,sim.data[p_layer_1],label_test_filtered,sim.dt)
+    accuracy_2 = evaluation_v2(10,n_neurons,int(((args.presentation_time * label_test_filtered.shape[0]) / sim.dt) / input_nbr),spikes_layer1_probe_train,label_train_filtered,sim.data[p_layer_1],label_test_filtered,sim.dt)
 
 
     labels = sim.data[p_true_label][:,0]

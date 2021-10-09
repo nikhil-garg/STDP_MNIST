@@ -1,0 +1,2 @@
+amp_neuron,input_nbr,tau_in,tau_out,alpha_p,alpha_n,beta_p,beta_n,tau_pre,tau_post,iterations,presentation_time,pause_time,dt,n_neurons,inhibition_time,tau_ref_in,tau_ref_out,inc_n,tau_n,synapse_layer_1,gain_in,gain_out,accuracy,accuracy_2,bias_out,seed
+0.001,600.0,0.03,0.03,0.01,0.009,1.5,2.5,0.0168,0.0337,1.0,0.2,0.1,0.005,10.0,10.0,0.005,0.005,0.01,1.0,0.005,2.0,,8.0,0.0,0.0,100.0
