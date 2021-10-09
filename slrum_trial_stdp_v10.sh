@@ -26,6 +26,8 @@ pip install Nni
 pip install numpy
 pip install pandas
 pip install Mako
+pip install nengo_extras
+
 
 cd ..
 
