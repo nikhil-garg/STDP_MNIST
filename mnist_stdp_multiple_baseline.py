@@ -143,9 +143,9 @@ def evaluate_mnist_multiple_baseline(args):
         # setup the probes
         #############################
 
-        layer1_synapses_probe = nengo.Probe(conn1,"weights",label="layer1_synapses") 
-        layer1_spikes_probe = nengo.Probe(layer1.neurons,"output",label="layer1_spikes")
-        layer1_voltage_probe = nengo.Probe(layer1.neurons,"voltage",label="layer1_voltage")
+        # layer1_synapses_probe = nengo.Probe(conn1,"weights",label="layer1_synapses") 
+        # layer1_spikes_probe = nengo.Probe(layer1.neurons,"output",label="layer1_spikes")
+        # layer1_voltage_probe = nengo.Probe(layer1.neurons,"voltage",label="layer1_voltage")
 
         layer1_synapses_probe = nengo.Probe(conn1,"weights",label="layer1_synapses", sample_every=5)
         
