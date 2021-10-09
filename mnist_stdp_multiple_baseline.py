@@ -10,7 +10,7 @@ from LIFN2S3 import LIF
 from InputData import PresentInputWithPause
 from Heatmap import AllHeatMapSave,HeatMapSave
 from datetime import datetime
-from nengo_extras.data import load_mnist
+# from nengo_extras.data import load_mnist
 import pickle
 from args_mnist import args as my_args
 import random
@@ -31,22 +31,26 @@ def evaluate_mnist_multiple_baseline(args):
 
     img_rows, img_cols = 28, 28
     Dataset = "Mnist"
-    (image_train, label_train), (image_test, label_test) = load_mnist()
-
+    data = np.load('mnist_norm.npz', allow_pickle=True)
+    image_train_filtered = data['image_train_filtered']/255
+    label_train_filtered = data['label_train_filtered']
+    image_test_filtered = data['image_test_filtered']/255
+    label_test_filtered = data['label_test_filtered']
+    
     #select the 0s and 1s as the two classes from MNIST data
-    image_train_filtered = []
-    label_train_filtered = []
+    # image_train_filtered = []
+    # label_train_filtered = []
 
-    epoch = 1
+    # epoch = 1
 
-    for e in range(epoch):
-        for i in range(0,input_nbr):
-    #       if label_train[i] in range(0,2):
-                image_train_filtered.append(image_train[i])
-                label_train_filtered.append(label_train[i])
+    # for e in range(epoch):
+    #     for i in range(0,input_nbr):
+    # #       if label_train[i] in range(0,2):
+    #             image_train_filtered.append(image_train[i])
+    #             label_train_filtered.append(label_train[i])
 
-    print("actual input",len(label_train_filtered))
-    print(np.bincount(label_train_filtered))
+    # print("actual input",len(label_train_filtered))
+    # print(np.bincount(label_train_filtered))
 
 
     image_train_filtered = np.array(image_train_filtered)
