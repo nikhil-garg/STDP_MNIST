@@ -1,0 +1,80 @@
+created virtual environment CPython3.7.9.final.0-64 in 15523ms
+  creator CPython3Posix(dest=/localscratch/ng1998.16327347.0/env, clear=False, global=False)
+  seeder FromAppData(download=False, pip=latest, setuptools=latest, wheel=latest, via=copy, app_data_dir=/home/ng1998/.local/share/virtualenv/seed-app-data/v1.0.1)
+  activators BashActivator,CShellActivator,FishActivator,PowerShellActivator,PythonActivator,XonshActivator
+Ignoring pip: markers 'python_version < "3"' don't match your environment
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo/avx2, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo/generic/matplotlib-3.4.2+computecanada-cp37-cp37m-linux_x86_64.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/cycler-0.10.0+computecanada-py3-none-any.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo/generic/kiwisolver-1.3.1+computecanada-cp37-cp37m-linux_x86_64.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/python_dateutil-2.8.2+computecanada-py2.py3-none-any.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo/generic/numpy-1.21.0+computecanada-cp37-cp37m-linux_x86_64.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/pyparsing-2.4.7+computecanada-py2.py3-none-any.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo/generic/Pillow-8.3.1+computecanada-cp37-cp37m-linux_x86_64.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/six-1.16.0+computecanada-py2.py3-none-any.whl
+Installing collected packages: six, cycler, kiwisolver, python-dateutil, numpy, pyparsing, pillow, matplotlib
+Successfully installed cycler-0.10.0+computecanada kiwisolver-1.3.1+computecanada matplotlib-3.4.2+computecanada numpy-1.21.0+computecanada pillow-8.3.1+computecanada pyparsing-2.4.7+computecanada python-dateutil-2.8.2+computecanada six-1.16.0+computecanada
+Cloning into 'nengo'...
+Ignoring pip: markers 'python_version < "3"' don't match your environment
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo/avx2, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Obtaining file:///localscratch/ng1998.16327347.0/nengo
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+    Preparing wheel metadata: started
+    Preparing wheel metadata: finished with status 'done'
+Requirement already satisfied: numpy>=1.13 in /localscratch/ng1998.16327347.0/env/lib/python3.7/site-packages (from nengo==3.2.0.dev0) (1.21.0+computecanada)
+Installing collected packages: nengo
+  Running setup.py develop for nengo
+Successfully installed nengo
+Ignoring pip: markers 'python_version < "3"' don't match your environment
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo/avx2, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/nni-2.0+computecanada-py3-none-any.whl
+Requirement already satisfied: numpy; sys_platform != "win32" and python_version >= "3.7" in /localscratch/ng1998.16327347.0/env/lib/python3.7/site-packages (from Nni) (1.21.0+computecanada)
+Collecting schema
+  Using cached schema-0.7.4-py2.py3-none-any.whl (16 kB)
+Collecting responses
+  Using cached responses-0.14.0-py2.py3-none-any.whl (27 kB)
+Collecting filelock
+  Using cached filelock-3.3.0-py3-none-any.whl (9.7 kB)
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo/generic/netifaces-0.11.0+computecanada-cp37-cp37m-linux_x86_64.whl
+Collecting hyperopt==0.1.2
+  Using cached hyperopt-0.1.2-py3-none-any.whl (115 kB)
+Collecting json-tricks
+  Using cached json_tricks-3.15.5-py2.py3-none-any.whl (26 kB)
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/requests-2.26.0+computecanada-py2.py3-none-any.whl
+Collecting PythonWebHDFS
+  Using cached PythonWebHDFS-0.2.3-py3-none-any.whl (10 kB)
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/ruamel.yaml-0.17.16+computecanada-py3-none-any.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/colorama-0.4.4+computecanada-py2.py3-none-any.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo/generic/scikit_learn-0.24.2+computecanada-cp37-cp37m-linux_x86_64.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo/generic/websockets-9.1+computecanada-cp37-cp37m-linux_x86_64.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo/generic/psutil-5.8.0+computecanada-cp37-cp37m-linux_x86_64.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/astor-0.8.1+computecanada-py2.py3-none-any.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/prettytable-2.2.1+computecanada-py3-none-any.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo/generic/scipy-1.7.1+computecanada-cp37-cp37m-linux_x86_64.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/contextlib2-21.6.0+computecanada-py2.py3-none-any.whl
+Requirement already satisfied: six in /localscratch/ng1998.16327347.0/env/lib/python3.7/site-packages (from responses->Nni) (1.16.0+computecanada)
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/urllib3-1.26.7+computecanada-py2.py3-none-any.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/future-0.18.2+computecanada-py3-none-any.whl
+Collecting tqdm
+  Using cached tqdm-4.62.3-py2.py3-none-any.whl (76 kB)
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/networkx-2.6.3+computecanada-py3-none-any.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo/generic/pymongo-3.12.0+computecanada-cp37-cp37m-linux_x86_64.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/charset_normalizer-2.0.6+computecanada-py3-none-any.whl
+Collecting certifi>=2017.4.17
+  Using cached certifi-2021.10.8-py2.py3-none-any.whl (149 kB)
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/idna-3.2+computecanada-py3-none-any.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo/generic/simplejson-3.17.3+computecanada-cp37-cp37m-linux_x86_64.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo/generic/ruamel.yaml.clib-0.2.6+computecanada-cp37-cp37m-linux_x86_64.whl
+Collecting joblib>=0.11
+  Using cached joblib-1.1.0-py2.py3-none-any.whl (306 kB)
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/threadpoolctl-3.0.0+computecanada-py3-none-any.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/wcwidth-0.2.5+computecanada-py2.py3-none-any.whl
+Collecting importlib-metadata; python_version < "3.8"
+  Using cached importlib_metadata-4.8.1-py3-none-any.whl (17 kB)
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/typing_extensions-3.10.0.2+computecanada-py3-none-any.whl
+Collecting zipp>=0.5
+  Using cached zipp-3.6.0-py3-none-any.whl (5.3 kB)
+Installing collected packages: contextlib2, schema, urllib3, charset-normalizer, certifi, idna, requests, responses, filelock, netifaces, future, tqdm, scipy, networkx, pymongo, hyperopt, json-tricks, simplejson, PythonWebHDFS, ruamel.yaml.clib, ruamel.yaml, colorama, joblib, threadpoolctl, scikit-learn, websockets, psutil, astor, wcwidth, typing-extensions, zipp, importlib-metadata, prettytable, Nni
